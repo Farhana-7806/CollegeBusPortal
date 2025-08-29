@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bus Map</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr-RZlsYq9_fnuGMuFybCUTQgKrm7VTj8"></script>
+</head>
+<body>
+  <div id="map" style="height:500px;width:100%"></div>
+  <script>
+    const map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 12,
+      center: {lat: 26.9124, lng: 75.7873} // Jaipur
+    });
+
+    const ws = new WebSocket('ws://localhost:8000/ws/bus/1/');
+
+    const marker = new google.maps.Marker({ map: map });
+
+    ws.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        const position = {lat: data.lat, lng: data.lng};
+        marker.setPosition(position);
+        map.setCenter(position);
+        console.log("Speed:", data.speed);
+    };
+  </script>
+</body>
+</html>
